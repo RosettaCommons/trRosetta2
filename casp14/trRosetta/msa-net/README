@@ -1,0 +1,18 @@
+# 1) generate TAPE features
+conda activate /home/aivan/.conda/envs/tmol
+python /projects/casp/trRosetta/tape/get_embeddings.py example/fake.fa example/fake.tape.npy
+conda deactivate
+
+
+# 2) predict 6d coordinates
+conda activate tensorflow-testing
+
+# option (a): sliding window predicitons (default, takes longer)
+python ./predict.py --windowed -m network02_0 example/fake.a3m example/fake.tape.npy example/fake.npz
+
+# option (b): one-shot predicitons
+python ./predict.py --one-shot -m network02_0 example/fake.a3m example/fake.tape.npy example/fake.npz
+
+
+# 3) modeling
+python /projects/casp/trRosetta/folding/RosettaTR.py --roll -m 2 -pd 0.15 -sg 7,3 example/fake.npz example/fake.fa example/fake.pdb
