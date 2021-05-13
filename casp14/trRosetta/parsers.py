@@ -2,13 +2,13 @@ import numpy as np
 import scipy
 import scipy.spatial
 import string
-import os,re
+import re
 
 to1letter = {
     "ALA":'A', "ARG":'R', "ASN":'N', "ASP":'D', "CYS":'C',
     "GLN":'Q', "GLU":'E', "GLY":'G', "HIS":'H', "ILE":'I',
     "LEU":'L', "LYS":'K', "MET":'M', "PHE":'F', "PRO":'P',
-    "SER":'S', "THR":'T', "TRP":'W', "TYR":'Y', "VAL":'V' }
+    "SER":'S', "THR":'T', "TRP":'W', "TYR":'Y', "VAL":'V'}
 
 # read A3M and convert letters into
 # integers in the 0..20 range,
@@ -67,26 +67,45 @@ def parse_a3m(filename):
 
     ins = np.array(ins, dtype=np.uint8)
 
-    return msa,ins
+    return {'msa':msa, 'ins':ins}
 
 
-# load processed .hhr
-def parse_hhr_npz(filename):
+# read and extract xyz coords of N,Ca,C atoms
+# from a PDB file
+def parse_pdb(filename):
 
-    if not os.path.isfile(filename):
-        return None
+    lines = open(filename,'r').readlines()
 
-    hhr = np.load(filename)
-    labels = hhr['labels']
-    splits = hhr['splits']
-    scores0d = hhr['scores0d']
-    scores1d = hhr['scores1d'].astype(np.uint16)
+    N  = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
+                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="N"])
+    Ca = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
+                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="CA"])
+    C  = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
+                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="C"])
 
-    nbytes = labels.nbytes + scores0d.nbytes + scores1d.nbytes
+    xyz = np.stack([N,Ca,C], axis=0)
 
-    scores1d = np.split(scores1d,splits)[:-1]
+    # indices of residues observed in the structure
+    idx = np.array([int(l[22:26]) for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="CA"])
 
-    return (labels,scores0d,scores1d,nbytes)
+    return xyz,idx
+
+
+def parse_pdb_lines(lines):
+
+    N  = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
+                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="N"])
+    Ca = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
+                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="CA"])
+    C  = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
+                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="C"])
+
+    xyz = np.stack([N,Ca,C], axis=0)
+
+    # indices of residues observed in the structure
+    idx = np.array([int(l[22:26]) for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="CA"])
+
+    return [xyz,idx]
 
 
 # parse HHsearch output
@@ -170,66 +189,3 @@ def parse_hhr(filename, ffindex, idmax=105.0):
             out.append([hits[idx][0],matches,p/100,seqid/100,neff/10])
 
     return out
-
-
-# randomly subsample the alignment
-def subsample_msa(msa,ins):
-
-    nr, nc = msa.shape
-
-    # do not subsample shallow MSAs
-    if nr < 10:
-        return msa,ins
-
-    # number of sequences to subsample
-    n = int(10.0**np.random.uniform(np.log10(nr))-10.0)
-    if n <= 0:
-        return np.reshape(msa[0],[1,nc]),np.reshape(ins[0],[1,nc])
-
-    # n unique indices
-    sample = sorted(random.sample(range(1, nr-1), n))
-
-    # stack first sequence with n randomly selected ones
-    msa_new = np.vstack([msa[0][None,:], msa[1:][sample]])
-    ins_new = np.vstack([ins[0][None,:], ins[1:][sample]])
-
-    return msa_new.astype(np.uint8),ins_new.astype(np.uint8)
-
-
-# read and extract xyz coords of N,Ca,C atoms
-# from a PDB file
-def parse_pdb(filename):
-
-    lines = open(filename,'r').readlines()
-
-    N  = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
-                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="N"])
-    Ca = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
-                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="CA"])
-    C  = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
-                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="C"])
-
-    xyz = np.stack([N,Ca,C], axis=0)
-
-    # indices of residues observed in the structure
-    idx = np.array([int(l[22:26]) for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="CA"])
-
-    return xyz,idx
-
-
-def parse_pdb_lines(lines):
-
-    N  = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
-                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="N"])
-    Ca = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
-                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="CA"])
-    C  = np.array([[float(l[30:38]), float(l[38:46]), float(l[46:54])]
-                    for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="C"])
-
-    xyz = np.stack([N,Ca,C], axis=0)
-
-    # indices of residues observed in the structure
-    idx = np.array([int(l[22:26]) for l in lines if l[:4]=="ATOM" and l[12:16].strip()=="CA"])
-
-    return [xyz,idx]
-
