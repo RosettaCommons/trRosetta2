@@ -1,0 +1,21 @@
+usage: predict.py [-h] -i MSA -o NPZ -m MDIR [--tape TAPE] [--hhr HHR]
+                  [--ffdb FFDB] [--crop {cont,discont}] [--ntmp NTMP]
+                  [--cov COV] [--maxseq MAXSEQ]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i MSA, --ia3m MSA    multiple sequence alignment in A3M format (input)
+                        (default: None)
+  -o NPZ, --onpz NPZ    network predictions (output) (default: None)
+  -m MDIR, --mdir MDIR  network predictions (output) (default: None)
+  --tape TAPE           TAPE embeddings (default: None)
+  --hhr HHR             template hits from HHsearch (default: None)
+  --ffdb FFDB           path to FFINDEX database of templates (default:
+                        ../pdb100_2020Mar11/pdb100_2020Mar11)
+  --crop {cont,discont}
+                        choose between continuous and discontinuous cropping
+                        modes (default: cont)
+  --ntmp NTMP           number of top HHsearch hits to use (default: 25)
+  --cov COV             clean MSA using this coverage cutoff (default: 0.5)
+  --maxseq MAXSEQ       max number of sequences in the cleaned MSA (default:
+                        20000)

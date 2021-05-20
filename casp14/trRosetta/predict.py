@@ -28,8 +28,8 @@ def main():
     ########################################################
     # 0. process argumets
     ########################################################
-   
-    args = get_args()
+    wdir = os.path.abspath(os.path.dirname(__file__))
+    args = get_args(wdir)
 
     # load network weights
     if args.hhr is not None:

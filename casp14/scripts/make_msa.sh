@@ -7,8 +7,7 @@ out_dir="$2"
 CPU="$3"
 MEM="$4"
 
-#DB="$PIPEDIR/UniRef30_2020_06_hhsuite/UniRef30_2020_06"
-DB="/databases/uniclust/30/latest/UniRef30_2020_06"
+DB="$PIPEDIR/UniRef30_2020_06_hhsuite/UniRef30_2020_06"
 
 # search command
 HHBLITS="hhblits -o /dev/null -mact 0.35 -maxfilt 20000 -neffmax 20 -cpu $CPU -nodiff -realign_max 20000 -maxmem $MEM -n 4 -d $DB"

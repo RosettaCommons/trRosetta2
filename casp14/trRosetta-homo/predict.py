@@ -1,6 +1,10 @@
 #!/usr/bin/python
 
-import os,sys
+import warnings, logging, os, sys
+warnings.filterwarnings('ignore',category=FutureWarning)
+logging.disable(logging.WARNING)
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+
 import json
 import tensorflow as tf
 import numpy as np
@@ -13,7 +17,7 @@ if len(sys.argv) < 3:
 msa_file = sys.argv[1]
 npz_file = sys.argv[2]
 
-MDIR     = '%s/models'%(os.path.dirname(os.path.realpath(__file__)))
+MDIR     = '%s/../weights/trrosetta_homo'%(os.path.dirname(os.path.realpath(__file__)))
 
 n2d_layers   = 36
 n2d_filters  = 64

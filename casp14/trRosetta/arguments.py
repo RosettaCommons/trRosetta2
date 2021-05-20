@@ -1,6 +1,6 @@
 import argparse
 
-def get_args():
+def get_args(wdir):
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
@@ -9,8 +9,8 @@ def get_args():
     parser.add_argument('-m','--mdir', type=str, required=True, dest='mdir', help='network predictions (output)')
 
     parser.add_argument('--tape', type=str, dest='tape', help='TAPE embeddings')
-    parser.add_argument('--hhr', type=str, dest='hhr', help='templates identified by HHsearch')
-    parser.add_argument('--ffdb', type=str, dest='ffdb', default='/projects/ml/trRosetta2/pdb100_2020Mar11/pdb100_2020Mar11', 
+    parser.add_argument('--hhr', type=str, dest='hhr', help='template hits from HHsearch')
+    parser.add_argument('--ffdb', type=str, dest='ffdb', default=wdir+'/../pdb100_2020Mar11/pdb100_2020Mar11', 
                         help='path to FFINDEX database of templates')
     parser.add_argument('--crop', type=str, dest='crop', default='cont', choices=['cont','discont'],
                         help='choose between continuous and discontinuous cropping modes')
