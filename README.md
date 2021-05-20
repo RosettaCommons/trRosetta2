@@ -5,9 +5,9 @@ This package contains deep learning models and related scripts used by Baker gro
 
 ### Linux / Mac
 ```
-# 1) clone packcage
-git clone https://github.com/RosettaCommons/deep_learning_public
-cd deep_learning_public/casp14
+# 1) clone package
+git clone https://github.com/RosettaCommons/trRosetta2
+cd trRosetta2
 
 # 2) create conda environment
 conda env create -f casp14-baker.yml
