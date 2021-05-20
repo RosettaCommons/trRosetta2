@@ -1,4 +1,4 @@
-name: casp14-gpu
+name: casp14-baker
 channels:
   - conda-forge
   - defaults
