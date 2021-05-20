@@ -1,9 +1,7 @@
 import numpy as np
 import torch
-import os,sys
+import sys
 from tape import ProteinBertModel, TAPETokenizer
-import glob
-import time
 
 def parse_fasta(filename,limit=-1):
   '''function to parse fasta'''

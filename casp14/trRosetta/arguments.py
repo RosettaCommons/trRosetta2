@@ -6,7 +6,7 @@ def get_args():
     
     parser.add_argument('-i','--ia3m', type=str, required=True, dest='msa', help='multiple sequence alignment in A3M format (input)')
     parser.add_argument('-o','--onpz', type=str, required=True, dest='npz', help='network predictions (output)')
-    parser.add_argument('-m','--mdir', type=str, dest='mdir', default='/projects/ml/trRosetta2', help='network predictions (output)')
+    parser.add_argument('-m','--mdir', type=str, required=True, dest='mdir', help='network predictions (output)')
 
     parser.add_argument('--tape', type=str, dest='tape', help='TAPE embeddings')
     parser.add_argument('--hhr', type=str, dest='hhr', help='templates identified by HHsearch')

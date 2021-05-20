@@ -6,7 +6,8 @@ import multiprocessing as mp
 import numpy as np
 from sklearn.cluster import AgglomerativeClustering
 
-script_dir = os.path.dirname(__file__)
+script_dir = os.path.abspath(os.path.dirname(__file__))
+
 def get_args():
     import argparse
     parser = argparse.ArgumentParser(description='''TrRefine: Refinement of trRosetta outputs''')
@@ -40,8 +41,8 @@ def calc_lddt_dist(args):
     pose_i = pose_s[i]
     pose_j = pose_s[j]
     #
-    lddt_1 = float(os.popen("/home/minkbaek/bin/lddt -c %s %s | grep Glob"%(pose_i, pose_j)).readlines()[-1].split()[-1])
-    lddt_2 = float(os.popen("/home/minkbaek/bin/lddt -c %s %s | grep Glob"%(pose_j, pose_i)).readlines()[-1].split()[-1])
+    lddt_1 = float(os.popen("%s/../lddt/lddt -c %s %s | grep Glob"%(script_dir, pose_i, pose_j)).readlines()[-1].split()[-1])
+    lddt_2 = float(os.popen("%s/../lddt/lddt -c %s %s | grep Glob"%(script_dir, pose_j, pose_i)).readlines()[-1].split()[-1])
     lddt = (lddt_1 + lddt_2) / 2.0
     return 1 - lddt
 

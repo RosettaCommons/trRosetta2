@@ -13,7 +13,7 @@ from collections import namedtuple
 #import time
 from parsers import *
 from coords6d import get_coords6d
-from arguments import get_args_new as get_args
+from arguments import get_args
 from utils import * #load_weights_msa,resblock
 from ffindex import read_index,read_data,get_entry_by_name,read_entry_lines
 

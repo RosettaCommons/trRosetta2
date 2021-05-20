@@ -1,6 +1,9 @@
-import sys
+import warnings, logging, os, sys
+warnings.filterwarnings('ignore',category=FutureWarning)
+logging.disable(logging.WARNING)
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+
 import argparse
-import os
 from os import listdir
 from os.path import isfile, isdir, join
 import numpy as np
