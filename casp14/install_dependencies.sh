@@ -63,5 +63,7 @@ wget https://ftpmirror.gnu.org/parallel/parallel-latest.tar.bz2
 mkdir -p parallel
 tar xf parallel-latest.tar.bz2 -C parallel --strip-components=1
 cd parallel
+(
 ./configure --prefix=`pwd` && make && make install
+) > install.stdout 2> install.stderr
 cd ..
