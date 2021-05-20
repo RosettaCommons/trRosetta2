@@ -9,24 +9,24 @@ This package contains deep learning models and related scripts used by Baker gro
 git clone https://github.com/RosettaCommons/deep_learning_public
 cd deep_learning_public/casp14
 
-# 2) download network weights
-wget https://files.ipd.uw.edu/pub/trRosetta2/weights.tar.bz2
-tar xf weights.tar.bz2
-
-# 3) create conda environment
+# 2) create conda environment
 conda env create -f casp14-baker.yml
 conda activate casp14-baker
+
+# 3) download network weights [1.1G]
+wget https://files.ipd.uw.edu/pub/trRosetta2/weights.tar.bz2
+tar xf weights.tar.bz2
 
 # 4) download and install third-party software
 ./install_dependencies.sh
 
 # 5) download sequence and structure databases
 
-# uniclust30 for hh-suite
+# uniclust30 [46G]
 wget http://wwwuser.gwdg.de/~compbiol/uniclust/2020_06/UniRef30_2020_06_hhsuite.tar.gz
 tar xf UniRef30_2020_06_hhsuite.tar.gz
 
-# database of pdb templates
+# structure templates [8.3G]
 wget https://files.ipd.uw.edu/pub/trRosetta2/pdb100_2020Mar11.tar.gz
 tar xf pdb100_2020Mar11.tar.gz
 ```
@@ -41,3 +41,20 @@ mkdir -p examples/T1078
 ./run_pipeline example/T1078.fa example/T1078
 ```
 
+
+
+## Links
+
+* [Robetta server](https://robetta.bakerlab.org/)
+
+
+## References
+
+[1] I Anishchenko, M Baek, H Park, J Dauparas, N Hiranuma, S Mansoor, I Humphrey, D Baker. Protein structure prediction guided by predicted inter-residue geometries. 
+In: [CASP14 Abstract Book, 2020](https://predictioncenter.org/casp14/doc/CASP14_Abstracts.pdf)
+
+[2] H Park, M Baek, N Hiranuma, I Anishchenko, S Mansoor, J Dauparas, D Baker. Model refinement guided by an interplay between Deep-learning and Rosetta.
+In: [CASP14 Abstract Book, 2020](https://predictioncenter.org/casp14/doc/CASP14_Abstracts.pdf)
+
+[3] M Baek, I Anishchenko, H Park, I Humphrey, D Baker. Protein oligomer structure predictions guided by predicted inter-chain contacts.
+In: [CASP14 Abstract Book, 2020](https://predictioncenter.org/casp14/doc/CASP14_Abstracts.pdf)
