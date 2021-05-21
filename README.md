@@ -3,7 +3,7 @@ This package contains deep learning models and related scripts used by Baker gro
 
 ## Installation
 
-### Linux / Mac
+### Linux
 ```
 # 1) clone package
 git clone https://github.com/RosettaCommons/trRosetta2
