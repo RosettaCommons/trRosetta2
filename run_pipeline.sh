@@ -135,7 +135,6 @@ then
         -a3m_fn $WDIR/t000_.msa0.a3m -hhr_fn $WDIR/t000_.hhr \
         -n_core $CPU > $WDIR/log/trRefine.stdout 2> $WDIR/log/trRefine.stderr
     cd ..
-    touch $WDIR/DONE_iter1
 fi
 
 
