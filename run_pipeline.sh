@@ -18,8 +18,6 @@ mkdir -p $WDIR/log
 ############################################################
 # 1. generate MSAs
 ############################################################
-export HHLIB=$PIPEDIR/hh-suite/build
-export PATH=$HHLIB/bin:$PATH
 if [ ! -s $WDIR/t000_.msa0.a3m ]
 then
     echo "Running HHblits"
@@ -118,7 +116,7 @@ then
         done
     done > $WDIR/parallel.list
     echo "Folding trRosetta models"
-    $PIPEDIR/parallel/bin/parallel -j $CPU < $WDIR/parallel.list > $WDIR/log/folding.stdout 2> $WDIR/log/folding.stderr
+    parallel -j $CPU < $WDIR/parallel.list > $WDIR/log/folding.stdout 2> $WDIR/log/folding.stderr
     touch $WDIR/DONE_iter0
 fi
 
@@ -134,7 +132,7 @@ then
         -tbm_npz $WDIR/t000_.tbm.npz -pdb_dir_s $WDIR/pdb-msa $WDIR/pdb-tbm \
         -a3m_fn $WDIR/t000_.msa0.a3m -hhr_fn $WDIR/t000_.hhr \
         -n_core $CPU > $WDIR/log/trRefine.stdout 2> $WDIR/log/trRefine.stderr
-    cd ..
+    cd -
 fi
 
 
@@ -159,7 +157,7 @@ then
     done > $WDIR/trRefine_fold.list
     
     echo "Folding trRefine models"
-    $PIPEDIR/parallel/bin/parallel -j $CPU < $WDIR/trRefine_fold.list > $WDIR/log/trRefine_fold.stdout 2> $WDIR/log/trRefine_fold.stderr
+    parallel -j $CPU < $WDIR/trRefine_fold.list > $WDIR/log/trRefine_fold.stdout 2> $WDIR/log/trRefine_fold.stderr
     touch $WDIR/DONE_iter1
     ls $WDIR/pdb-trRefine/model*.pdb > $WDIR/pdb-trRefine/pdb.list
 fi
