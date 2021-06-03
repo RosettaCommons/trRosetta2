@@ -65,7 +65,7 @@ fi
 
 if [ $LEN -gt 700 ]
 then
-    crop="dicont"
+    crop="discont"
 else
     crop="cont"
 fi
