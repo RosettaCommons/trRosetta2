@@ -11,6 +11,10 @@ from data_loader import load_train_data, process_inputs, setup_valid_dataset, lo
 from resnet import build_resnet
 from utils import *
 
+config = tf.ConfigProto(
+    gpu_options = tf.GPUOptions(allow_growth=True)
+)
+
 N_AA_MSA = 21
 WMIN = 0.8
 N_DIST_BIN = 37

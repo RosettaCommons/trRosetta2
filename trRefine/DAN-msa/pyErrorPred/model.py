@@ -14,6 +14,10 @@ from .resnet import *
 from .deepLearningUtils import *
 from .layers import *
 
+config = tf.ConfigProto(
+    gpu_options = tf.GPUOptions(allow_growth=True)
+)
+
 class Model:
     def __init__(self,
                  obt_size,
