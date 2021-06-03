@@ -7,7 +7,7 @@ import logging
 tf.get_logger().setLevel(logging.ERROR)
 from model import ResNet_model
 
-#os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+script_dir = os.path.abspath(os.path.dirname(__file__))
 
 SCRIPT_PATH = os.path.dirname(__file__)
 
@@ -24,7 +24,7 @@ def main():
     opt.add_argument('-a3m_fn', required=True)
     opt.add_argument('-hhr_fn', default=None)
     opt.add_argument('-pdb_fn_s', required=True, nargs='+')
-    opt.add_argument('-db', dest='TMPDB', default='/projects/ml/TrRosetta/pdb100_2020Mar11/pdb100_2020Mar11')
+    opt.add_argument('-db', dest='TMPDB', default='%s/../../pdb100_2020Mar11/pdb100_2020Mar11'%SCRIPT_PATH)
     #
     if len(sys.argv) == 1:
         opt.print_help()

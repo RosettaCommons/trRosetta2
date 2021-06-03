@@ -7,7 +7,7 @@ import logging
 tf.get_logger().setLevel(logging.ERROR)
 from model import ResNet_model
 
-#os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+script_dir = os.path.abspath(os.path.dirname(__file__))
 
 SCRIPT_PATH = os.path.dirname(__file__)
 
@@ -29,7 +29,7 @@ def main():
                          help='input pdb file for prediction')
     opt.add_argument('-templ_fn', '--templ_fn', dest='templ_fn',  default=None, \
                          help='template information file in npz format')
-    opt.add_argument('-db', dest='TMPDB', default='/projects/ml/TrRosetta/pdb100_2020Mar11/pdb100_2020Mar11')
+    opt.add_argument('-db', dest='TMPDB', default='%s/../../pdb100_2020Mar11/pdb100_2020Mar11'%SCRIPT_PATH)
     #
     
     if len(sys.argv) == 1:
