@@ -3,42 +3,51 @@ This package contains deep learning models and related scripts used by Baker gro
 
 ## Installation
 
-### Linux
+### Linux/Mac
+
+1. clone the package
 ```
-# 1) clone package
 git clone https://github.com/RosettaCommons/trRosetta2
 cd trRosetta2
+```
 
-# 2) create conda environment
-conda env create -f casp14-baker.yml
+2. create conda environment using one of the .yml files: `casp14-baker-linux-cpu.yml`, `casp14-baker-linux-gpu.yml`, `casp14-baker-mac-cpu.yml`
+```
+conda env create -f casp14-baker-linux-gpu.yml
 conda activate casp14-baker
+```
 
-# 3) download network weights [1.1G]
+3. download network weights [1.1G]
+```
 wget https://files.ipd.uw.edu/pub/trRosetta2/weights.tar.bz2
 tar xf weights.tar.bz2
+```
 
-# 4) download and install third-party software
+4. download and install third-party software
+```
 ./install_dependencies.sh
+```
 
-# 5) download sequence and structure databases
-
+5. download sequence and structure databases
+```
 # uniclust30 [46G]
 wget http://wwwuser.gwdg.de/~compbiol/uniclust/2020_06/UniRef30_2020_06_hhsuite.tar.gz
-tar xf UniRef30_2020_06_hhsuite.tar.gz
+mkdir -p UniRef30_2020_06
+tar xf UniRef30_2020_06_hhsuite.tar.gz -C ./UniRef30_2020_06
 
 # structure templates [8.3G]
 wget https://files.ipd.uw.edu/pub/trRosetta2/pdb100_2020Mar11.tar.gz
 tar xf pdb100_2020Mar11.tar.gz
 ```
 
-Obtain a [PyRosetta licence](https://els2.comotion.uw.edu/product/pyrosetta) and install the package in `casp14-baker` conda environment ([link](http://www.pyrosetta.org/dow)).
+Obtain a [PyRosetta licence](https://els2.comotion.uw.edu/product/pyrosetta) and install the package in the newly created `casp14-baker` conda environment ([link](http://www.pyrosetta.org/dow)).
 
 
 ## Usage
 
 ```
 mkdir -p examples/T1078
-./run_pipeline example/T1078.fa example/T1078
+./run_pipeline.sh example/T1078.fa example/T1078
 ```
 
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-DATADIR="$PIPEDIR/psipred/data"
+DATADIR="$CONDA_PREFIX/share/psipred_4.01/data"
+echo $DATADIR
 
 i_a3m="$1"
 o_ss="$2"
@@ -13,9 +14,9 @@ head -n 2 $i_a3m > $ID.fasta
 echo $ID.chk > $ID.pn
 echo $ID.fasta > $ID.sn
 
-$PIPEDIR/blast-2.2.26/bin/makemat -P $ID
-$PIPEDIR/psipred/bin/psipred $ID.mtx $DATADIR/weights.dat $DATADIR/weights.dat2 $DATADIR/weights.dat3 > $ID.ss
-$PIPEDIR/psipred/bin/psipass2 $DATADIR/weights_p2.dat 1 1.0 1.0 $i_a3m.csb.hhblits.ss2 $ID.ss > $ID.horiz
+makemat -P $ID
+psipred $ID.mtx $DATADIR/weights.dat $DATADIR/weights.dat2 $DATADIR/weights.dat3 > $ID.ss
+psipass2 $DATADIR/weights_p2.dat 1 1.0 1.0 $i_a3m.csb.hhblits.ss2 $ID.ss > $ID.horiz
 
 (
 echo ">ss_pred"

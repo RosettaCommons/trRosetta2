@@ -1,0 +1,22 @@
+name: casp14-baker
+channels:
+  - defaults
+  - bioconda
+  - biocore
+  - conda-forge
+dependencies:
+  - biopython=1.78
+  - biocore::blast-legacy=2.2.26
+  - hhsuite
+  - numpy=1.19
+  - pandas
+  - psipred=4.01
+  - python=3.6
+  - pytorch=1.4
+  - scikit-learn=0.24
+  - scipy=1.5
+  - tensorflow-gpu=1.14
+  - parallel
+  - pip
+  - pip:
+    - tape-proteins==0.4
