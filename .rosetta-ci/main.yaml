@@ -1,0 +1,28 @@
+
+
+# list of GitHub labels and set of tests they should schedule
+labels:
+  00 basic:
+    -
+      os: ubuntu-20.04
+      compiler: gcc
+      python: '3.9'
+      tests:
+        - self.state
+        #- self.regression
+        - self.subtests
+        - self.release
+
+
+  01 python:
+    -
+      os: ubuntu-20.04
+      compiler: gcc
+      python: '3.9'
+      tests: [self.python]
+
+
+# specify list of tests that should be applied by-default during testing of each new commit and PR
+default:
+  - 00 basic
+  - 01 python
