@@ -19,7 +19,7 @@ import codecs
 
 from importlib.machinery import SourceFileLoader
 
-from configparser import ConfigParser
+from configparser import ConfigParser, ExtendedInterpolation
 import argparse
 
 from tests import *  # execute, Tests states and key names
@@ -73,31 +73,55 @@ def setup_from_options(options):
     platform['compiler'] = options.compiler
 
     if os.path.isfile(options.config):
-        Config = ConfigParser( dict(here=os.path.abspath('./') ) )
+        with open(options.config) as f:
+            if '%(here)s' in f.read():
+                print(f"\n\n>>> ERROR file `{options.config}` seems to be in outdated format! Please use benchmark.template.ini to update it.")
+                sys.exit(1)
 
-        with open(options.config) as f: Config.readfp(f)
+        user_config = ConfigParser(
+            dict(
+                _here_ = os.path.abspath('./'),
+                _user_home_ = os.environ['HOME']
+            ),
+            interpolation = ExtendedInterpolation()
+        )
+
+        with open(options.config) as f: user_config.readfp(f)
 
     else:
         print(f"\n\n>>> Config file `{options.config}` not found. You may want to manually copy `benchmark.ini.template` to `{options.config}` and edit the settings\n\n")
-        Config = ConfigParser()
-        Config.set('DEFAULT', 'cpu_count',  '1')
-        Config.set('config', 'hpc_driver', 'MultiCore')
-        Config.set('config', 'branch',     'unknown')
-        Config.set('config', 'revision',   '42')
-        Config.set('config', 'user_name',  'Jane Roe')
-        Config.set('config', 'user_email', 'jane.roe@university.edu')
-        Config.add_section('config')
+        user_config = ConfigParser()
+        user_config.set('main', 'cpu_count',  '1')
+        user_config.set('main', 'hpc_driver', 'MultiCore')
+        user_config.set('main', 'branch',     'unknown')
+        user_config.set('main', 'revision',   '42')
+        user_config.set('main', 'user_name',  'Jane Roe')
+        user_config.set('main', 'user_email', 'jane.roe@university.edu')
+        user_config.add_section('main')
 
-    if options.jobs: Config.set('DEFAULT', 'cpu_count', str(options.jobs) )
-    Config.set('DEFAULT', 'memory',    str(memory) )
+    if options.jobs: user_config.set('main', 'cpu_count', str(options.jobs) )
+    user_config.set('main', 'memory',    str(memory) )
+
+    if options.mount:
+        for m in options.mount:
+            key, _, path = m.partition(':')
+            user_config.set('mount', key, path)
 
     #config = Config.items('config')
-    config = { section: dict(Config.items(section)) for section in Config.sections() }
-    config.update( config.pop('config').items() )
+    #for section in config.sections(): print('Config section: ', section, dict(config.items(section)))
+    #config = { section: dict(Config.items(section)) for section in Config.sections() }
+
+    config = { k : d for k, d in user_config['main'].items() if k not in user_config[user_config.default_section] }
+    config['mounts'] = { k : d for k, d in user_config['mount'].items() if k not in user_config[user_config.default_section] }
+
+    #print(json.dumps(config, sort_keys=True, indent=2)); sys.exit(1)
+
+    #config.update( config.pop('config').items() )
+
     config = dict(config,
-                  cpu_count = Config.getint('DEFAULT', 'cpu_count'),
+                  cpu_count = user_config.getint('main', 'cpu_count'),
                   memory = memory,
-                  revision = Config.getint('config', 'revision'),
+                  revision = user_config.getint('main', 'revision'),
                   emulation=True,
     )  # debug=options.debug,
 
@@ -359,6 +383,9 @@ def main(args):
     parser.add_argument("--merge-head", default='HEAD', help="Specify SHA1/branch-name that will be used for `merge-head` value when simulating PR testing" )
 
     parser.add_argument("--merge-base", default='origin/master', help="Specify SHA1/branch-name that will be used for `merge-base` value when simulating PR testing" )
+
+    parser.add_argument("--mount", action="append", help="Specify one of the mount points, like: --mount release_root:/some/path. This option could be used multiple times if needed" )
+
 
     parser.add_argument('args', nargs=argparse.REMAINDER)
 

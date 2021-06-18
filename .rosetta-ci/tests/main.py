@@ -25,7 +25,13 @@ _api_version_ = '1.0'
 
 def run_pipeline_test(repository_root, working_dir, platform, config):
 
+    # if os.path.isfile( os.getenv("HOME") + '/.condarc'): raise BenchmarkError(f'~/.condarc file seems to be present, - this _really_ should not have happened, terminating...')
+    # else:
+    #     if os.path.isfile( os.getenv("HOME") + '/.condarc.template' ) execute('Creating .condarc from template...', 'cp ~/.condarc.template ~/.condarc')
+
     conda = setup_conda_virtual_environment(working_dir, platform, config)
+
+    execute('Installing PyRosetta package...', f'{conda.activate} && conda install --channel file://{config["mounts"]["release_root"]}/PyRosetta4/conda/release pyrosetta')
 
     execute('Installing Conda packages...', f'{conda.activate_base} && conda env update --prefix {conda.root} -f {repository_root}/casp14-baker-linux-gpu.yml')
 
