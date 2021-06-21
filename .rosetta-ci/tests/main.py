@@ -31,7 +31,7 @@ def run_pipeline_test(repository_root, working_dir, platform, config):
 
     conda = setup_conda_virtual_environment(working_dir, platform, config)
 
-    execute('Installing PyRosetta package...', f'{conda.activate} && conda install --channel file://{config["mounts"]["release_root"]}/PyRosetta4/conda/release pyrosetta')
+    execute('Installing PyRosetta package...', f'{conda.activate} && conda install --channel file://{config["mounts"]["release_root"]}/PyRosetta4/conda/release --yes pyrosetta')
 
     execute('Installing Conda packages...', f'{conda.activate_base} && conda env update --prefix {conda.root} -f {repository_root}/casp14-baker-linux-gpu.yml')
 
