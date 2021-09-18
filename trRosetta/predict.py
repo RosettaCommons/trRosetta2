@@ -46,6 +46,11 @@ def main():
     inputs = parse_a3m(args.msa)
     N,L = inputs['msa'].shape
 
+    # introduce sequence separation (for complexes)
+    inputs.update({'idx':np.arange(L)})
+    if args.len1 > 0:
+        inputs['idx'][args.len1:] += 500
+
     # load TAPE embeddings
     if args.tape is not None:
         #tape = np.load(args.tape)[:,1:-1,:]

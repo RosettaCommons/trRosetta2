@@ -8,6 +8,8 @@ def get_args(wdir):
     parser.add_argument('-o','--onpz', type=str, required=True, dest='npz', help='network predictions (output)')
     parser.add_argument('-m','--mdir', type=str, required=True, dest='mdir', help='network predictions (output)')
 
+    parser.add_argument('-L','--len1', type=int, default=0, required=False, dest='len1', help='length of protein 1')
+
     parser.add_argument('--tape', type=str, dest='tape', help='TAPE embeddings')
     parser.add_argument('--hhr', type=str, dest='hhr', help='template hits from HHsearch')
     parser.add_argument('--ffdb', type=str, dest='ffdb', default=wdir+'/../pdb100_2020Mar11/pdb100_2020Mar11', 

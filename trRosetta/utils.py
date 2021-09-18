@@ -255,6 +255,7 @@ def get_cont_crop(inputs,i,window,cov,maxseq):
     mask = np.sum(msa_==20,axis=-1)<(cov*window)
     msa_ = msa_[mask][:maxseq]
     ins_ = ins_[mask][:maxseq]
+    idx_ = inputs['idx'][i:j]
 
     print("window_%d: pos=%d N(seq)=%d"%(window,i,msa_.shape[0]))
 
@@ -262,7 +263,7 @@ def get_cont_crop(inputs,i,window,cov,maxseq):
         'msa'  : msa_,
         'ins'  : ins_,
         'tape' : inputs['tape'][:,i:j],
-        'idx'  : np.arange(i,j)
+        'idx'  : idx_
     }
 
     if 't1d' in inputs.keys():
@@ -287,7 +288,7 @@ def get_discont_crop(inputs,i,j,wi,wj,cov,maxseq):
     mask = np.sum(msa_==20,axis=-1)<(cov*wi)
     msa_ = msa_[mask][:maxseq]
     ins_ = ins_[mask][:maxseq]
-    idx_ = np.arange(L)[sel]
+    idx_ = inputs['idx'][sel]
 
     print("window_%dx%d: pos=(%d,%d) N(seq)=%d"%(wi,wj,i,j,msa_.shape[0]))
     
@@ -304,7 +305,7 @@ def get_discont_crop(inputs,i,j,wi,wj,cov,maxseq):
             't2d' : inputs['t2d'][:,sel][:,:,sel],
         })
         
-    return feed_dict,idx_
+    return feed_dict,np.arange(L)[sel]
 
 
 def get_mask2d(L1,L2):

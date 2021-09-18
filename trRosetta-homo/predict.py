@@ -9,6 +9,7 @@ import json
 import tensorflow as tf
 import numpy as np
 import string
+from gen_rst import generate_contact_restraints
 
 if len(sys.argv) < 3:
     print ("python %s [MSA file (a3m or FASTA format)] [output npz file]"%__file__)
@@ -16,6 +17,7 @@ if len(sys.argv) < 3:
 
 msa_file = sys.argv[1]
 npz_file = sys.argv[2]
+nchains  = int(sys.argv[3])
 
 MDIR     = '%s/../weights/trrosetta_homo'%(os.path.dirname(os.path.realpath(__file__)))
 
@@ -200,6 +202,8 @@ with tf.Graph().as_default():
             contacts['pp'].append(pp[0])
             print(ckpt, '- done')
 
+hdist = np.mean(contacts['ph'], axis=0)
+
 # average over all network params
 contacts['pd'] = np.mean(contacts['pd'], axis=0)
 contacts['ph'] = np.mean(contacts['ph'], axis=0)[:,:,1:21].sum(axis=-1)
@@ -208,4 +212,10 @@ contacts['po'] = np.mean(contacts['po'], axis=0)
 contacts['pp'] = np.mean(contacts['pp'], axis=0)
 
 # save distograms & anglegrams
-np.savez_compressed(npz_file, dist=contacts['pd'], hcont=contacts['ph'], omega=contacts['po'], theta=contacts['pt'], phi=contacts['pp'])
+np.savez_compressed(npz_file+'.npz', dist=contacts['pd'], hcont=contacts['ph'], omega=contacts['po'], theta=contacts['pt'], phi=contacts['pp'])
+
+# save Rosetta constraints file
+rst = generate_contact_restraints(msa_file, hdist, nchains)
+if len(rst) > 0:
+    with open(npz_file+".rst", 'wt') as fp:
+        fp.write(rst)
